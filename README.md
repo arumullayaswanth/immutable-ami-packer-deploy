@@ -94,59 +94,8 @@ echo -e "\nJenkins initial admin password:"
 sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 ```
 
-## Step 6: Access Jenkins in Browser
 
-1. Visit: http\://:8080
-2. Get the initial admin password:
-
-```bash
-sudo cat /var/lib/jenkins/secrets/initialAdminPassword
-```
-
-3. Paste the password into the browser and complete setup.
-4. Click Install suggested plugins
-5. Create first user:
-
-   * Username = yaswanth
-   * Password = yaswanth
-   * Full Name = yaswanth
-   * Email = [yash@example.com](mailto:yash@example.com)
-6. Click through: Save and Continue → Save and Finish → Start using Jenkins
-
-# 🔌 Step 7: Install Jenkins Plugin
-
-1. Jenkins Dashboard → Manage Jenkins
-2. Go to: Plugins
-3. Click Available plugins
-4. Search for:
-
-* pipeline: stage view
-
-5. Install it
-
-# 🛠️ Step 8: Create a Jenkins Pipeline Job
-
-1. Go to Jenkins Dashboard
-2. Click New Item
-3. Name it: `packer`
-4. Select: Pipeline
-5. Click OK
-
-**Pipeline Configuration:**
-
-* Definition : Pipeline script from SCM
-* SCM : Git
-* Repository : `https://github.com/arumullayaswanth/immutable-ami-packer-deploy.git`
-* Branches to build : `*/master`
-* Script Path : `Jenkinsfile`
-* Click Apply
-* Click Save
-
-6. Click **Build** to run the pipeline.
-
----
-
-## 🏠 Step 9: Create Target Group for Load Balancer
+## 🏠 Step 6: Create Target Group for Load Balancer
 
 1. Go to AWS Console → EC2 → **Target Groups**
 2. Click **Create Target Group**
@@ -172,7 +121,7 @@ This target group can now be attached to an **Application Load Balancer** for ro
 
 ---
 
-## 🚀 Step 10: Create a Launch Template
+## 🚀 Step 7: Create a Launch Template
 
 1. Go to AWS Console → EC2 → **Launch Templates**
 2. Click **Create launch template**
@@ -198,7 +147,7 @@ Now you can use this template in an **Auto Scaling Group** or to quickly launch 
 
 ---
 
-## 🌐 Step 11: Create Application Load Balancer Across All Availability Zones
+## 🌐 Step 8: Create Application Load Balancer Across All Availability Zones
 
 1. Go to AWS Console → EC2 → **Load Balancers**
 2. Click **Create Load Balancer**
@@ -226,7 +175,7 @@ Now you can use this template in an **Auto Scaling Group** or to quickly launch 
 
 ---
 
-## 🎯 Step 12: Attach Target Group to Load Balancer
+## 🎯 Step 9: Attach Target Group to Load Balancer
 
 1. Under **Default action**, choose:
 
@@ -244,7 +193,7 @@ http://<load-balancer-dns-name>:80
 
 ---
 
-## 📈 Step 13: Create Auto Scaling Group (ASG)
+## 📈 Step 10: Create Auto Scaling Group (ASG)
 
 1. Go to **EC2 Console** → **Auto Scaling Groups**
 2. Click **Create Auto Scaling group**
@@ -303,9 +252,61 @@ http://<load-balancer-dns-name>:80
 * Click **Create Auto Scaling group**
 
 ✅ You now have a scalable and resilient Jenkins deployment that can auto-recover and distribute traffic through the ALB using the Packer-built AMI.
+---
 
+## Step 11: Access Jenkins in Browser
 
-##  Step 14: update Auto Scaling Group (ASG) and launch template in jenkins file
+1. Visit: http\ec2_ip://:8080
+2. Get the initial admin password:
+
+```bash
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+```
+
+3. Paste the password into the browser and complete setup.
+4. Click Install suggested plugins
+5. Create first user:
+
+   * Username = yaswanth
+   * Password = yaswanth
+   * Full Name = yaswanth
+   * Email = [yash@example.com](mailto:yash@example.com)
+6. Click through: Save and Continue → Save and Finish → Start using Jenkins
+
+# 🔌 Step 12: Install Jenkins Plugin
+
+1. Jenkins Dashboard → Manage Jenkins
+2. Go to: Plugins
+3. Click Available plugins
+4. Search for:
+
+* pipeline: stage view
+
+5. Install it
+
+# 🛠️ Step 8: Create a Jenkins Pipeline Job
+
+1. Go to Jenkins Dashboard
+2. Click New Item
+3. Name it: `packer`
+4. Select: Pipeline
+5. Click OK
+
+**Pipeline Configuration:**
+
+* Definition : Pipeline script from SCM
+* SCM : Git
+* Repository : `https://github.com/arumullayaswanth/immutable-ami-packer-deploy.git`
+* Branches to build : `*/master`
+* Script Path : `Jenkinsfile`
+* Click Apply
+* Click Save
+
+6. Click **Build** to run the pipeline.
+
+---
+
+##  Step 13: update Auto Scaling Group (ASG) and launch template in jenkins file
 ```bash
 pipeline {
     agent any
@@ -316,5 +317,5 @@ pipeline {
         ASG_NAME = "asgnew"                          // update latest Auto Scaling Group
     }
 ```
-## 🛠️ Step 15: Build Pipeline agian
+## 🛠️ Step 14: Build Pipeline agian
 
