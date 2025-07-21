@@ -302,3 +302,18 @@ http://<load-balancer-dns-name>:80
 * Click **Create Auto Scaling group**
 
 ✅ You now have a scalable and resilient Jenkins deployment that can auto-recover and distribute traffic through the ALB using the Packer-built AMI.
+
+
+##  Step 14: update Auto Scaling Group (ASG) and launch template in jenkins file
+```bash
+pipeline {
+    agent any
+
+    environment {
+        AWS_REGION = 'us-east-1'
+        LAUNCH_TEMPLATE_ID = 'lt-0ae02ab8f8356c3a7'  // update latest launch template
+        ASG_NAME = "asgnew"                          // update latest Auto Scaling Group
+    }
+```
+## 🛠️ Step 15: Build Pipeline agian
+
