@@ -25,6 +25,13 @@
 ```bash
 ssh -i "your-key.pem" ubuntu@<your-ec2-public-ip>
 ```
+```bash
+# Update system packages
+sudo apt update && sudo apt upgrade -y
+```
+```bash
+sudo -i
+```
 
 ## Step 3: Install packer
 
@@ -54,42 +61,33 @@ sudo ./aws/install
 
 ## Step 5: Install Java and Jenkins
 
+
 ```bash
-# Update system packages
-sudo apt update && sudo apt upgrade -y
-```
-```bash
-# Add the new public key
-curl -fsSL https://apt.corretto.aws/corretto.key | gpg --dearmor | sudo tee /usr/share/keyrings/corretto.gpg > /dev/null
-```
-```bash
-# Add the repository using the new signed key
-echo "deb [signed-by=/usr/share/keyrings/corretto.gpg] https://apt.corretto.aws stable main" | sudo tee /etc/apt/sources.list.d/corretto.list
-```
-```bash
-# Update package index
+# Import Corretto GPG key
+wget -O- https://apt.corretto.aws/corretto.key | gpg --dearmor | sudo tee /usr/share/keyrings/corretto-keyring.gpg > /dev/null
+
+# Add Corretto repo
+echo "deb [signed-by=/usr/share/keyrings/corretto-keyring.gpg] https://apt.corretto.aws stable main" | sudo tee /etc/apt/sources.list.d/corretto.list
+
+# Update and install Java
 sudo apt update
-```
-```bash
-# Install Amazon Corretto 17
 sudo apt install -y java-17-amazon-corretto-jdk
-```
-```bash
-# Verify Java version
+
+# Verify Java
 java -version
 ```
 ```bash
-# Download Jenkins .deb package
-wget https://pkg.jenkins.io/debian-stable/binary/jenkins_2.414.1_all.deb
+# Add Jenkins repo key
+wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | gpg --dearmor | sudo tee /usr/share/keyrings/jenkins-keyring.gpg > /dev/null
+
+# Add Jenkins repo
+echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.gpg] https://pkg.jenkins.io/debian-stable binary/" | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+
+# Update and install Jenkins
+sudo apt update
+sudo apt install -y jenkins
 ```
-```bash
-# Install Jenkins
-sudo dpkg -i jenkins_2.414.1_all.deb
-```
-```bash
-# Fix missing dependencies (if any)
-sudo apt -f install -y
-```
+
 ```bash
 # Start Jenkins service
 sudo systemctl start jenkins
