@@ -109,6 +109,7 @@ sudo systemctl status jenkins
 ### Configuration:
 
 * **Target type**: `Instance`
+* **Target group name**: `packer`
 * **Protocol**: `HTTP`
 * **Port**: `8080`
 * **VPC**: Select the same VPC as your EC2 instance
@@ -120,8 +121,9 @@ sudo systemctl status jenkins
 * **Path**: `/`
 * Leave other settings as default or adjust based on requirements
 
-3. Click **Next**, then register your Jenkins EC2 instance
-4. Click **Create target group**
+3. Click **Next**, then
+4. **Available instances** : register your Jenkins EC2 instance
+5. Click **Create target group**
 
 This target group can now be attached to an **Application Load Balancer** for routing traffic to Jenkins.
 
@@ -134,9 +136,9 @@ This target group can now be attached to an **Application Load Balancer** for ro
 
 ### Configuration:
 
-* **Launch template name**: `jenkins-template`
+* **Launch template name**: `packer-template`
 * **Template version description**: `Initial version`
-* **AMI ID**: \`any AMI\`
+* **AMI ID**: `Ubuntu Server 24.04 LTS (HVM), SSD Volume Type`
 * **Instance type**: `t2.medium`
 * **Key pair**: Select your existing key pair
 * **Network settings**:
@@ -161,7 +163,7 @@ Now you can use this template in an **Auto Scaling Group** or to quickly launch 
 
 ### Configuration:
 
-* **Name**: `jenkins-alb`
+* **Name**: `packer-alb`
 * **Scheme**: Internet-facing
 * **IP address type**: IPv4
 
@@ -179,13 +181,11 @@ Now you can use this template in an **Auto Scaling Group** or to quickly launch 
 * **Port**: 80
 * Click **Add listener** if needed (default is fine for now)
 
----
-
-## 🎯 Step 9: Attach Target Group to Load Balancer
+### 🎯 Step 9: Attach Target Group to Load Balancer
 
 1. Under **Default action**, choose:
 
-   * **Forward to** → `jenkins-tg` (your target group)
+   * **Forward to** → `packer-tg` (your target group)
 2. Click **Next** through the remaining steps
 3. Review and click **Create Load Balancer**
 
@@ -206,10 +206,10 @@ http://<load-balancer-dns-name>:80
 
 ### Auto Scaling Group Configuration:
 
-* **Auto Scaling group name**: `jenkins-asg`
+* **Auto Scaling group name**: `packer-asg`
 * **Launch Template**:
 
-  * Select: `jenkins-template` (created in Step 10)
+  * Select: `packer-template` (created in Step 10)
   * Use: **Latest version**
 
 ### Network:
@@ -227,8 +227,8 @@ http://<load-balancer-dns-name>:80
 2. Select **Application Load Balancer**
 3. Choose:
 
-   * **Load Balancer**: `jenkins-alb`
-   * **Target Group**: `jenkins-tg`
+   * **Load Balancer**: `packer-alb`
+   * **Target Group**: `packer-tg`
 
 ---
 
