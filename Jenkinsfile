@@ -3,30 +3,34 @@ pipeline {
 
     environment {
         AWS_REGION = 'us-east-1'
-        LAUNCH_TEMPLATE_ID = 'lt-0ae02ab8f8356c3a7'
-        ASG_NAME = "asgnew"
-        
+        LAUNCH_TEMPLATE_ID = 'lt-0ae02ab8f8356c3a7'  // update latest launch template
+        ASG_NAME = "asgnew"                          // update latest Auto Scaling Group
     }
 
     stages {
+        stage('Example') {
+            steps {
+                echo "Deploying with Packer and updating ASG"
+            }
+        }
+
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-          stage('Packer Init') {
+
+        stage('Packer Init') {
             steps {
                 sh 'packer init .'
             }
         }
 
-
         stage('Build AMI with Packer') {
             steps {
-                // Save output to packer.log
                 sh '''
-                   packer validate packer.pkr.hcl
-                   packer build packer.pkr.hcl | tee packer.log
+                    packer validate packer.pkr.hcl
+                    packer build packer.pkr.hcl | tee packer.log
                 '''
             }
         }
@@ -48,31 +52,31 @@ pipeline {
 
         stage('Update Launch Template') {
             steps {
-            script {
-              sh """
-                aws ec2 create-launch-template-version \\
-                  --launch-template-id ${LAUNCH_TEMPLATE_ID} \\
-                  --version-description "Updated with AMI ${NEW_AMI_ID}" \\
-                  --source-version 1 \\
-                  --launch-template-data '{"ImageId":"${NEW_AMI_ID}"}' \\
-                  --region ${AWS_REGION}
-              """
+                script {
+                    sh """
+                        aws ec2 create-launch-template-version \\
+                          --launch-template-id ${LAUNCH_TEMPLATE_ID} \\
+                          --version-description "Updated with AMI ${NEW_AMI_ID}" \\
+                          --source-version 1 \\
+                          --launch-template-data '{"ImageId":"${NEW_AMI_ID}"}' \\
+                          --region ${AWS_REGION}
+                    """
+                }
             }
-          }
         }
-    
+
         stage('Start ASG Instance Refresh') {
-          steps {
-            script {
-              sh """
-                aws autoscaling start-instance-refresh \\
-                  --auto-scaling-group-name ${ASG_NAME} \\
-                  --preferences MinHealthyPercentage=50,InstanceWarmup=300 \\
-                  --region ${AWS_REGION} \\
-                  --query 'InstanceRefreshId' --output text
-              """
+            steps {
+                script {
+                    sh """
+                        aws autoscaling start-instance-refresh \\
+                          --auto-scaling-group-name ${ASG_NAME} \\
+                          --preferences MinHealthyPercentage=50,InstanceWarmup=300 \\
+                          --region ${AWS_REGION} \\
+                          --query 'InstanceRefreshId' --output text
+                    """
+                }
             }
-          }
         }
-      }
     }
+}
