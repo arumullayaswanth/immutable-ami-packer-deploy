@@ -57,38 +57,49 @@ sudo ./aws/install
 ```bash
 # Update system packages
 sudo apt update && sudo apt upgrade -y
-
+```
+```bash
 # Import the Amazon Corretto public key
 wget -O- https://apt.corretto.aws/corretto.key | sudo gpg --dearmor -o /usr/share/keyrings/corretto-keyring.gpg
-
+```
+```bash
 # Add the Corretto 17 APT repo
 echo "deb [signed-by=/usr/share/keyrings/corretto-keyring.gpg] https://apt.corretto.aws stable main" | sudo tee /etc/apt/sources.list.d/corretto.list
-
+```
+```bash
 # Update package index
 sudo apt update
-
+```
+```bash
 # Install Amazon Corretto 17
 sudo apt install -y java-17-amazon-corretto-jdk
-
+```
+```bash
 # Verify Java version
 java -version
-
+```
+```bash
 # Download Jenkins .deb package
 wget https://pkg.jenkins.io/debian-stable/binary/jenkins_2.414.1_all.deb
-
+```
+```bash
 # Install Jenkins
 sudo dpkg -i jenkins_2.414.1_all.deb
-
+```
+```bash
 # Fix missing dependencies (if any)
 sudo apt -f install -y
-
+```
+```bash
 # Start Jenkins service
 sudo systemctl start jenkins
 sudo systemctl enable jenkins
-
+```
+```bash
 # Check Jenkins status
 sudo systemctl status jenkins --no-pager
-
+```
+```bash
 # Display the initial admin password
 echo -e "\nJenkins initial admin password:"
 sudo cat /var/lib/jenkins/secrets/initialAdminPassword
