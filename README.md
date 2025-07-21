@@ -36,72 +36,69 @@ sudo -i
 ## Step 3: Install packer
 
 ```bash
-# Add HashiCorp GPG key
-curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+# Update and install dependencies
+sudo apt update && sudo apt install -y unzip wget
 
-# Add official HashiCorp Linux repository
-sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+# Download latest packer (replace with latest version if needed)
+wget https://releases.hashicorp.com/packer/1.10.2/packer_1.10.2_linux_amd64.zip
 
-# Update and install packer
-sudo apt update && sudo apt install packer
-```
+# Unzip and move to /usr/local/bin
+unzip packer_1.10.2_linux_amd64.zip
+sudo mv packer /usr/local/bin/
 
-```bash
-packer
+# Verify installation
+packer version
 ```
 
 ## Step 4: Install AWS CLI
 
 ```bash
+# Remove any old versions
+sudo apt remove awscli -y
+
+# Install AWS CLI v2
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-sudo apt-get install unzip -y
 unzip awscliv2.zip
 sudo ./aws/install
+
+# Verify installation
+aws --version
+
 ```
 
 ## Step 5: Install Java and Jenkins
-
-
 ```bash
-# Import Corretto GPG key
-wget -O- https://apt.corretto.aws/corretto.key | gpg --dearmor | sudo tee /usr/share/keyrings/corretto-keyring.gpg > /dev/null
-
-# Add Corretto repo
-echo "deb [signed-by=/usr/share/keyrings/corretto-keyring.gpg] https://apt.corretto.aws stable main" | sudo tee /etc/apt/sources.list.d/corretto.list
-
-# Update and install Java
+# Install Java (required for Jenkins)
 sudo apt update
-sudo apt install -y java-17-amazon-corretto-jdk
+sudo apt install -y openjdk-17-jdk
 
-# Verify Java
-java -version
-```
-```bash
-# Add Jenkins repo key
-wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | gpg --dearmor | sudo tee /usr/share/keyrings/jenkins-keyring.gpg > /dev/null
+# Add Jenkins repo and key
+curl -fsSL https://pkg.jenkins.io/debian/jenkins.io-2023.key | sudo tee \
+  /usr/share/keyrings/jenkins-keyring.asc > /dev/null
 
-# Add Jenkins repo
-echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.gpg] https://pkg.jenkins.io/debian-stable binary/" | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+  https://pkg.jenkins.io/debian binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
 
-# Update and install Jenkins
+# Install Jenkins
 sudo apt update
 sudo apt install -y jenkins
-```
 
-```bash
-# Start Jenkins service
+# Start and enable Jenkins service
 sudo systemctl start jenkins
 sudo systemctl enable jenkins
-```
-```bash
+
 # Check Jenkins status
-sudo systemctl status jenkins --no-pager
+sudo systemctl status jenkins
 ```
-```bash
-# Display the initial admin password
-echo -e "\nJenkins initial admin password:"
-sudo cat /var/lib/jenkins/secrets/initialAdminPassword
-```
+- 🔓 Access Jenkins Web UI
+  - Open port 8080 in your EC2 Security Group.
+  - Visit: `http://<ec2-public-ip>:8080`
+  - To get the initial admin password:
+  - ```bash
+    sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+    ```
+
 
 
 ## 🏠 Step 6: Create Target Group for Load Balancer
