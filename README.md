@@ -59,12 +59,12 @@ sudo ./aws/install
 sudo apt update && sudo apt upgrade -y
 ```
 ```bash
-# Import the Amazon Corretto public key
-wget -O- https://apt.corretto.aws/corretto.key | sudo gpg --dearmor -o /usr/share/keyrings/corretto-keyring.gpg
+# Add the new public key
+curl -fsSL https://apt.corretto.aws/corretto.key | gpg --dearmor | sudo tee /usr/share/keyrings/corretto.gpg > /dev/null
 ```
 ```bash
-# Add the Corretto 17 APT repo
-echo "deb [signed-by=/usr/share/keyrings/corretto-keyring.gpg] https://apt.corretto.aws stable main" | sudo tee /etc/apt/sources.list.d/corretto.list
+# Add the repository using the new signed key
+echo "deb [signed-by=/usr/share/keyrings/corretto.gpg] https://apt.corretto.aws stable main" | sudo tee /etc/apt/sources.list.d/corretto.list
 ```
 ```bash
 # Update package index
