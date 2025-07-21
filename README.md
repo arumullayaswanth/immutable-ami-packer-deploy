@@ -14,8 +14,9 @@
      * **SSH (22)** – Your IP
      * **HTTP (80)** – Anywhere (for Load Balancer or direct access)
      * **Custom TCP (8080)** – Anywhere (Jenkins default port)
-7. Launch instance with a new or existing key pair.
-8. After launching, **copy the public IP** of your instance.
+7. Attach IAM
+8. Launch instance with a new or existing key pair.
+9. After launching, **copy the public IP** of your instance.
 
 ---
 
