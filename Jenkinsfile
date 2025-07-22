@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         AWS_REGION = 'us-east-1'
-        LAUNCH_TEMPLATE_ID = 'lt-0ae02ab8f8356c3a7'  // update latest launch template
-        ASG_NAME = "asgnew"                          // update latest Auto Scaling Group
+        LAUNCH_TEMPLATE_ID = 'lt-06cf6c3aae9d3ad24'  // update latest Launch Template ID
+        ASG_NAME = "packer-asg"                          // update latest Auto Scaling Group name
     }
 
     stages {
