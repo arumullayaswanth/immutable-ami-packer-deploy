@@ -302,7 +302,7 @@ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 
 * Definition : Pipeline script from SCM
 * SCM : Git
-* Repository : `https://github.com/arumullayaswanth/immutable-ami-packer-deploy.git`
+* Repository : `https://github.com/arumullayaswanth/immutable-ami-packer-jenkins-deploy.git`
 * Branches to build : `*/master`
 * Script Path : `Jenkinsfile`
 * Click Apply
